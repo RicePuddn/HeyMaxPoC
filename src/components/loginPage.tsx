@@ -17,7 +17,7 @@ export default function LoginPage() {
     const role = localStorage.getItem("role"); 
 
     if (role === "customer") {
-      router.push("/customer-dashboard"); 
+      router.push("/customer-home"); 
     } else if (role === "seller") {
       router.push("/seller-dashboard"); 
     }
@@ -47,7 +47,7 @@ export default function LoginPage() {
         localStorage.setItem("role", data.user.role);
 
         const redirectPath =
-          searchParams.get("redirect") || (data.user.role === "customer" ? "/customer-dashboard" : "/seller-dashboard");
+          searchParams.get("redirect") || (data.user.role === "customer" ? "/customer-home" : "/seller-dashboard");
 
         console.log("Redirecting to:", redirectPath);
 

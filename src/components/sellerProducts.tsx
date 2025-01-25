@@ -159,13 +159,13 @@ export default function SellerProducts() {
               <p className="text-sm text-gray-500 mt-2">Price: ${product.price.toFixed(2)}</p>
               <div className="mt-4 flex justify-between">
                 <Button
-                  className="bg-slate-800"
+                  className="bg-slate-700 hover:bg-slate-800"
                   onClick={() => handleEdit(product)}
                 >
                   Edit
                 </Button>
                 <Button
-                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600"
                   onClick={() => handleDelete(product.id)}
                 >
                   Delete

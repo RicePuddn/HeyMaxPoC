@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SellerDashboard() {
   const [name, setName] = useState("");
@@ -11,8 +12,7 @@ export default function SellerDashboard() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const { toast } = useToast();
 
   const [stats, setStats] = useState({
     totalSales: 1500,
@@ -25,13 +25,9 @@ export default function SellerDashboard() {
 
     // Validate inputs
     if (!name || !quantity || !price || !description || !image) {
-      setError("All fields are required.");
+      toast({title:"All fields are required!",description:"Please fill up all fields, thank you!", variant:"destructive"});
       return;
     }
-
-    // Clear previous errors and success messages
-    setError("");
-    setSuccess("");
 
     try {
       const formData = new FormData();
@@ -48,7 +44,7 @@ export default function SellerDashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        setSuccess("Food item published successfully!");
+        toast({title:"Food item published successfully!",description:"You can check the product out at Manage Products", variant:"success"});
         // Reset the form fields
         setName("");
         setQuantity("");
@@ -57,12 +53,12 @@ export default function SellerDashboard() {
         setImage(null);
       } else {
         const data = await response.json();
-        setError(data.error || "Failed to publish food item.");
-        setSuccess("");
+        toast({title:`${data.error||"Failed to publish food item."}`,variant:"destructive"})
       }
     } catch (err) {
       console.error("Error publishing food item:", err);
-      setError("Something went wrong. Please try again.");
+      toast({title:`Error publishing food item 😵‍💫: ${err}`,variant:"destructive"})
+
     }
   };
 
@@ -164,9 +160,6 @@ export default function SellerDashboard() {
                   className="mt-1 block w-full"
                 />
               </div>
-
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              {success && <p className="text-green-500 text-sm">{success}</p>}
               <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
                 Publish
               </Button>

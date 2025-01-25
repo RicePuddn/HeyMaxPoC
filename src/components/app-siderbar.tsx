@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Calendar, Home, Inbox, Search, Settings, User2, Package, ShoppingCart } from "lucide-react";
+import { Calendar, Home, History, User2, Package, ShoppingCart } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -41,14 +41,14 @@ const menuItems = {
       icon: Home,
     },
     {
-      title: "Orders",
+      title: "Shopping Cart",
       url: "/customer-orders",
       icon: ShoppingCart,
     },
     {
-      title: "Search",
-      url: "/customer-search",
-      icon: Search,
+      title: "Order History",
+      url: "/customer-history",
+      icon: History,
     },
   ],
 };
