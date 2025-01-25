@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose"; // Import jwtVerify from jose
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret"; // Replace with your actual secret key
-const protectedPaths = ["/customer-dashboard", "/seller-dashboard"];
+const protectedPaths = ["/customer-home", "/seller-dashboard","/customer-order","/customer-history","/seller-products","/seller-sales"];
 
 async function verifyToken(token: string) {
   try {
@@ -47,5 +47,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/customer-dashboard/:path*", "/seller-dashboard/:path*"],
+  matcher: ["/customer-home", "/seller-dashboard","/customer-order","/customer-history","/seller-products","/seller-sales"],
 };

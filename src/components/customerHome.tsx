@@ -78,7 +78,7 @@ export default function CustomerHome() {
       availableQuantity: selectedItem.quantity
     });
 
-    toast({title:`${selectedItem.name} successfully added into cart!`, description:`Total Quantity: ${selectedQuantity}`})
+    toast({title:`${selectedItem.name} successfully added into cart!`, description:`Total Quantity:${selectedQuantity}`})
     console.log("Item added to cart successfully."); // Debug statement
     setSelectedItem(null);
     setSelectedQuantity(1);

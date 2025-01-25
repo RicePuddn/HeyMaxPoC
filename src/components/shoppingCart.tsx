@@ -119,7 +119,7 @@ export default function CartPage() {
                     Price: ${item.price.toFixed(2)}
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
-                    Available Quantity: {item.quantity}
+                    Available Quantity: {item.availableQuantity}
                   </p>
                   <div className="mt-4 flex justify-between items-center">
                     <div>
