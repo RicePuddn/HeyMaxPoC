@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // Import hooks
+import { useRouter, useSearchParams } from "next/navigation"; 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,19 +11,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams(); // Access query parameters
+  const searchParams = useSearchParams(); 
 
   useEffect(() => {
-    const authToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("authToken="))
-      ?.split("=")[1];
+    const role = localStorage.getItem("role"); 
 
-    if (authToken) {
-      const redirectPath = searchParams.get("redirect") || "/seller-dashboard"; // Default to seller-dashboard
-      router.push(redirectPath);
+    if (role === "customer") {
+      router.push("/customer-dashboard"); 
+    } else if (role === "seller") {
+      router.push("/seller-dashboard"); 
     }
-  }, [router, searchParams]);
+  }, [router]);
 
   const handleLogin = async () => {
     setError("");
@@ -45,17 +43,14 @@ export default function LoginPage() {
 
         console.log("Login successful:", data);
 
-        // Cache user data in localStorage
         localStorage.setItem("username", data.user.username);
         localStorage.setItem("role", data.user.role);
 
-        // Redirect to intended path or default dashboard
         const redirectPath =
           searchParams.get("redirect") || (data.user.role === "customer" ? "/customer-dashboard" : "/seller-dashboard");
 
         console.log("Redirecting to:", redirectPath);
 
-        // Perform the redirection
         router.push(redirectPath);
       } else {
         const errorData = await response.json();

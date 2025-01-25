@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose"; // Import `SignJWT` for token generation
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -41,16 +41,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate a JWT token
-    const token = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-      },
-      JWT_SECRET,
-      { expiresIn: "1d" } // Token valid for 1 day
-    );
+    // Generate a JWT token using `jose`
+    const token = await new SignJWT({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("1d") // Token valid for 1 day
+      .sign(new TextEncoder().encode(JWT_SECRET));
 
     // Set the token as an HTTP-only cookie
     const response = NextResponse.json({
