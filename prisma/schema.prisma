@@ -16,14 +16,15 @@ model User {
   password String
   location String
   role     String
-  foodItems FoodItem[] // Relation to FoodItem
+  foodItems FoodItem[] @relation("UserFoodItems")
 }
 
 model FoodItem {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   quantity    Int
   description String
-  providerID  Int
-  provider    User   @relation(fields: [providerID], references: [id])
+  imageUrl    String 
+  providerId  Int  
+  provider    User    @relation("UserFoodItems", fields: [providerId], references: [id])
 }

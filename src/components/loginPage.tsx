@@ -1,16 +1,70 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation"; // Import hooks
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams(); // Access query parameters
 
-  const handleLogin = () => {
-    console.log("Logging in with:", { username, password });
+  useEffect(() => {
+    const authToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("authToken="))
+      ?.split("=")[1];
+
+    if (authToken) {
+      const redirectPath = searchParams.get("redirect") || "/seller-dashboard"; // Default to seller-dashboard
+      router.push(redirectPath);
+    }
+  }, [router, searchParams]);
+
+  const handleLogin = async () => {
+    setError("");
+
+    if (!username || !password) {
+      setError("Username and password are required.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        console.log("Login successful:", data);
+
+        // Cache user data in localStorage
+        localStorage.setItem("username", data.user.username);
+        localStorage.setItem("role", data.user.role);
+
+        // Redirect to intended path or default dashboard
+        const redirectPath =
+          searchParams.get("redirect") || (data.user.role === "customer" ? "/customer-dashboard" : "/seller-dashboard");
+
+        console.log("Redirecting to:", redirectPath);
+
+        // Perform the redirection
+        router.push(redirectPath);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Invalid login details");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -18,14 +72,8 @@ export default function LoginPage() {
       <div className="flex w-full md:w-1/2 lg:w-1/3 items-center justify-center bg-white p-6 md:p-8">
         <Card className="w-full max-w-md shadow-md">
           <CardHeader>
-            <img
-              src="/img/logo.png"
-              alt="Logo"
-              className="mx-auto mb-4 h-16 md:h-28 lg:h-36"
-            />
-            <CardTitle className="text-center text-xl md:text-2xl lg:text-3xl font-bold">
-              Login
-            </CardTitle>
+            <img src="/img/logo.png" alt="Logo" className="mx-auto mb-4 h-32 md:h-44 lg:h-56" />
+            <CardTitle className="text-center text-xl md:text-2xl lg:text-3xl font-bold">Login</CardTitle>
             <p className="text-center text-sm md:text-base text-gray-500 mt-2">
               Don't have an account?{" "}
               <a href="/register" className="text-blue-600 hover:underline">
@@ -36,10 +84,7 @@ export default function LoginPage() {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                   Username
                 </label>
                 <Input
@@ -52,10 +97,7 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
                 <Input
@@ -70,21 +112,16 @@ export default function LoginPage() {
               <div className="flex flex-col sm:flex-row items-center justify-between">
                 <div className="flex items-center mb-2 sm:mb-0">
                   <Checkbox id="remember" />
-                  {/* This doesnt work */}
-                  <label
-                    htmlFor="remember"
-                    className="ml-2 text-sm text-gray-700"
-                  >
+                  <label htmlFor="remember" className="ml-2 text-sm text-gray-700">
                     Remember Me
                   </label>
                 </div>
-                <a
-                  href="/recover"
-                  className="text-sm text-blue-600 hover:underline"
-                >
+                <a href="/recover" className="text-sm text-blue-600 hover:underline">
                   Forgot Your Password?
                 </a>
               </div>
+
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <Button className="w-full mt-4" onClick={handleLogin}>
                 Log In
               </Button>
@@ -97,7 +134,7 @@ export default function LoginPage() {
       </div>
 
       <div
-        className="hidden md:flex w-full md:w-1/2 lg:w-2/3 bg-cover bg-center"
+        className="hidden md:flex w-full md:w-1/2 lg:w-2/3 bg-cover bg-center opacity-85"
         style={{
           backgroundImage: "url('/img/login_background.jpg')",
         }}
