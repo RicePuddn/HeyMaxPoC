@@ -11,6 +11,13 @@ export async function GET() {
           gt: 0, // Ensure only items with quantity > 0 are fetched
         },
       },
+      include: {
+        provider: {
+          select: {
+            location: true, // Include the seller's location
+          },
+        },
+      },
     });
 
     return NextResponse.json({ foodItems });

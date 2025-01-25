@@ -1,195 +1,130 @@
-# SavePlate Project
+# Project: SavePlate
 
 ## Overview
 
-SavePlate is a Real-Time Food Surplus Marketplace Platform designed to connect food businesses with surplus inventory to consumers seeking quality food at reduced prices. This platform aims to reduce food waste while benefiting both food providers and consumers.
+The **SavePlate** application is a robust platform that connects sellers and customers for efficient food item trading. Sellers can publish products, view sales reports, and manage their inventory. Customers can browse, search for, and purchase food items while tracking their order history.
 
 ## Features
 
-1. **User Roles**:
+### General
 
-   - **Customer**: View and purchase available food surplus items.
-   - **Seller**: Publish food items and track sales, food savings, and customer engagement.
+- **Authentication**: Login and registration for both sellers and customers.
+- **Role-Based Navigation**: Dynamic dashboards for sellers and customers.
 
-2. **Key Functionalities**:
+### Seller Features
 
-   - Real-time Inventory Management
-   - Location-based Search
-   - Analytics Dashboard for Sellers
-   - Secure Authentication with JWT
+- **Dashboard**:
+  - Publish food items with name, price, description, quantity, and image.
+  - View light statistics such as total revenue, unique customers, top product, and returning customers.
+- **Manage Products**:
+  - Edit and delete food items.
+  - Real-time updates for inventory changes.
+- **Sales Report**:
+  - View detailed transaction data, including revenue, unique customers, and returning customers.
+  - Identify top-selling products.
 
-3. **Technologies Used**:
+### Customer Features
 
-   - **Frontend**: Next.js, Tailwind CSS, Shadcn UI components
-   - **Backend**: Node.js, Prisma ORM, PostgreSQL
-   - **Package Manager**: pnpm
-   - **Authentication**: JWT-based authentication
-   - **Image Storage**: Cloudinary
+- **Home Page**:
+  - Browse and search for food items with a search bar.
+  - View product details, including seller location.
+  - Add items to a shopping cart with quantity validation.
+- **Shopping Cart**:
+  - View all items added to the cart.
+  - Edit quantities and delete items.
+  - Checkout to finalize purchases.
+- **Order History**:
+  - View past purchases with details about items, prices, and sellers.
 
----
-
-## Getting Started
+## Installation
 
 ### Prerequisites
 
-- Node.js >= 18
-- pnpm
-- PostgreSQL
+- Node.js (v16 or later)
+- PostgreSQL database
+- pnpm (preferred package manager)
 
-### Setup Instructions
+### Steps
 
-1. Clone the repository:
-
+1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repo-url/saveplate.git
-   cd saveplate
+   git clone https://github.com/your-repo/food-marketplace.git
+   cd food-marketplace
    ```
-
-2. Install dependencies:
-
+2. **Install Dependencies**:
    ```bash
    pnpm install
    ```
-
-3. Set up environment variables: Create a `.env` file in the root directory and configure the following:
-
+3. **Set Up Environment Variables**:
+   Create a `.env` file in the root directory and add the following variables:
    ```env
-   DATABASE_URL=postgresql://<username>:<password>@localhost:5432/saveplate
+   DATABASE_URL=your_postgresql_database_url
    JWT_SECRET=your_jwt_secret
-   CLOUDINARY_URL=cloudinary://<api_key>:<api_secret>@<cloud_name>
    ```
-
-4. Initialize the database:
-
-   ```bash
-   pnpm prisma db push
-   pnpm prisma db seed
-   ```
-
-5. Start the development server:
-
+4. **Set Up the Database**:
+   - Initialize Prisma:
+     ```bash
+     pnpm prisma generate
+     ```
+   - Run Migrations:
+     ```bash
+     pnpm prisma migrate dev
+     ```
+   - Seed Data (for the starting accounts):
+     ```bash
+     node prisma/seed.js     
+     ```
+5. **Start the Development Server**:
    ```bash
    pnpm dev
    ```
-
-6. Access the application: Open your browser and navigate to `http://localhost:3000`.
-
----
-
-## Project Structure
-
-```
-├── prisma
-│   ├── schema.prisma        # Prisma schema definition
-│   └── seed.ts              # Database seeding script
-├── src
-│   ├── app
-│   │   ├── api              # API routes (e.g., login, logout)
-│   │   ├── customer-dashboard
-│   │   ├── seller-dashboard
-│   │   ├── layout.tsx       # Layout with sidebar
-│   │   ├── middleware.ts    # Middleware for authentication
-│   │   └── page.tsx         # Landing page
-│   ├── components
-│   │   ├── ui               # Reusable UI components
-│   │   └── app-sidebar.tsx  # Sidebar component
-│   └── styles
-│       └── globals.css      # Global styles
-└── README.md                # Project documentation
-```
-
----
+6. **Access the Application**:
+   Open `http://localhost:3000` in your browser.
 
 ## API Endpoints
 
 ### Authentication
 
-- **Login**:
+- `POST /api/login`: Authenticate users.
+- `POST /api/register`: Register new users.
 
-  - Endpoint: `POST /api/login`
-  - Request Body:
-    ```json
-    {
-      "username": "string",
-      "password": "string"
-    }
-    ```
-  - Response:
-    ```json
-    {
-      "message": "Login successful",
-      "user": {
-        "id": 1,
-        "username": "seller_user",
-        "role": "seller"
-      }
-    }
-    ```
+### Seller
 
-- **Logout**:
+- `POST /api/upload-food`: Add a new food item.
+- `PATCH /api/food/[id]`: Update an existing food item.
+- `DELETE /api/food/[id]`: Delete a food item.
+- `GET /api/seller-stats`: Fetch statistics for the seller.
 
-  - Endpoint: `POST /api/logout`
-  - Response:
-    ```json
-    {
-      "message": "Logout successful"
-    }
-    ```
+### Customer
 
-- **Validate Token**:
+- `GET /api/food/get-food-items`: Retrieve all available food items.
+- `POST /api/checkout`: Handle cart checkout.
+- `GET /api/order-history`: Retrieve customer’s order history.
 
-  - Endpoint: `POST /api/validate-token`
-  - Request Body:
-    ```json
-    {
-      "token": "string"
-    }
-    ```
-  - Response:
-    ```json
-    {
-      "role": "string"
-    }
-    ```
+## Technologies Used
 
----
+- **Frontend**:
+  - Next.js (App Router)
+  - Tailwind CSS for styling
+- **Backend**:
+  - Prisma ORM
+  - PostgreSQL database
+  - JSON Web Tokens (JWT) for authentication
+- **Package Manager**: pnpm
 
-## Users for Testing
+## Key Features Implemented
 
-### Pre-created Users:
-
-#### Customer:
-
-- **Username**: `customer_user`
-- **Password**: `customer`
-- **Role**: `customer`
-- **Location**: `Bukit Panjang`
-
-#### Seller:
-
-- **Username**: `seller_user`
-- **Password**: `seller`
-- **Role**: `seller`
-- **Location**: `Yishun`
-
----
+- **Search Bar**: Real-time search functionality for customers.
+- **Dynamic Statistics**: Relevant statistics for sellers based on transactions.
+- **Cart Management**: Persistent cart with validation.
 
 ## Future Enhancements
 
-1. **Advanced Analytics**:
+- Implement email notifications for order confirmation.
+- Add more detailed analytics for sellers, such as sales trends over time.
+- Enable customer reviews for products.
 
-   - Add more detailed reports for sellers.
+## Contributors
 
-2. **Notifications**:
-
-   - Push notifications for new items or updates.
-
-3. **Payment Integration**:
-
-   - Integrate payment gateways for transactions.
-
-4. **Mobile App**:
-
-   - Develop a mobile-friendly version or native app.
-
----
+- **Ernest Heng** - Lead Developer
+- **HeyMax** - For the fun PoC idea!
