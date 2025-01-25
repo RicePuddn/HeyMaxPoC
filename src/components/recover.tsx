@@ -32,7 +32,7 @@ export default function RecoverPage() {
       if (response.ok) {
         setSuccess("Password updated successfully. You can now log in.");
         setTimeout(() => {
-          router.push("/login");
+          router.push("/");
         }, 2000);
       } else {
         const data = await response.json();
@@ -55,7 +55,7 @@ export default function RecoverPage() {
             </CardTitle>
             <p className="text-center text-sm md:text-base text-gray-500 mt-2">
               Remember your password?{" "}
-              <a href="/login" className="text-blue-600 hover:underline">
+              <a href="/" className="text-blue-600 hover:underline">
                 Log In
               </a>
             </p>

@@ -118,7 +118,7 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>router.push("/account")}>
                   <span>Account</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
