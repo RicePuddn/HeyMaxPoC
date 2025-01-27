@@ -126,5 +126,4 @@ The **SavePlate** application is a robust platform that connects sellers and cu
 
 ## Contributors
 
-- **Ernest Heng** - Lead Developer
-- **HeyMax** - For the fun PoC idea!
+- **Ernest Heng**
